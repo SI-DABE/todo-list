@@ -18,3 +18,7 @@ $ docker compose up -d
 Access http://localhost
 
 ### Teste de API
+
+```shell
+curl -H "Accept: application/json" localhost/tasks.php
+```
