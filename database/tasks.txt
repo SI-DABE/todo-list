@@ -1,0 +1,5 @@
+Entender os fundamentos dos Servidores Web
+Compreender a Sintaxe Básica do PHP
+Compreender os conceitos principais de Orientação a Objetos
+Compreender o funcionamento do docker compose
+Configurar o docker compose com nginx e php

@@ -1,8 +1,8 @@
-## Desenvolvimento de Aplicações Backend
+## Desenvolvimento de Aplicações Back-End
 
 Aplicação Lista de Tarefas usada como exemplo na disciplina de Desenvolvimento de Aplicações Back-End.
 
-### Requirements
+### Dependências
 
 -   Docker
 -   Docker Compose
@@ -10,7 +10,11 @@ Aplicação Lista de Tarefas usada como exemplo na disciplina de Desenvolvimento
 ### Run
 
 ```
-docker compose up -d
+$ git clone git@github.com:SI-DABE/todo-list.git
+$ cd todo-list
+$ docker compose up -d
 ```
 
 Access http://localhost
+
+### Teste de API
