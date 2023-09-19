@@ -18,6 +18,7 @@
             break;
         case 'DELETE': 
             echo 'DELETE'; 
+            Task::removeById(intval($_POST['task']['id']));
             break;
     }
 
