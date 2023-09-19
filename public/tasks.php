@@ -1,42 +1,27 @@
 <?php
-define('DB_PATH', '../database/tasks.txt');
+    require '../app/models/Task.php';
 
-if (
-    $_SERVER['REQUEST_METHOD'] === 'DELETE'
-    || (isset($_REQUEST['_method']) && $_REQUEST['_method'] === 'DELETE')
-) {
-
-    $id = intval($_POST['task']['id']);
-
-    $lines = file(DB_PATH, FILE_IGNORE_NEW_LINES);
-    foreach ($lines as $key => $line) {
-        if ($key === $id) unset($lines[$key]);
+    $method = $_REQUEST['_method'] ?? $_SERVER['REQUEST_METHOD'];
+    
+    switch ($method) {
+        case 'GET':
+            echo 'GET';
+            $task = new Task();
+            break;
+        case 'POST':
+            echo 'POST';
+            $task = new Task(name: $_POST['task']['name']);
+            if ($task->save())
+                echo 'Tarefa adicionada com sucesso!';
+            else
+                echo 'Não foi possível adicionar a tarefa!';
+            break;
+        case 'DELETE': 
+            echo 'DELETE'; 
+            break;
     }
 
-    $data = implode(PHP_EOL, $lines);
-    file_put_contents(DB_PATH, $data . PHP_EOL);
-} elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $taskName = trim($_POST['task']['name']);
-
-    if (empty($taskName)) {
-        $errors = ['task' => ['name' => 'Não pode ser vazio.']];
-    } else {
-        file_put_contents(DB_PATH, $taskName . PHP_EOL, FILE_APPEND | LOCK_EX);
-    }
-} else {
-    $tasks = file(DB_PATH, FILE_IGNORE_NEW_LINES);
-
-    if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-
-        if (isset($_SERVER['HTTP_ACCEPT']) && $_SERVER['HTTP_ACCEPT'] === 'application/json') {
-            header('Content-Type: application/json; charset=utf-8');
-            echo json_encode($tasks);
-            return;
-        }
-    }
-}
-
-$tasks = file(DB_PATH, FILE_IGNORE_NEW_LINES);
+    $tasks = Task::all();
 ?>
 
 <!Doctype html>
@@ -81,14 +66,14 @@ $tasks = file(DB_PATH, FILE_IGNORE_NEW_LINES);
     <h1>Lista de Tarefas</h1>
 
     <ul>
-        <?php foreach ($tasks as $index => $task) : ?>
+        <?php foreach ($tasks as $index => $task_) : ?>
             <li>
                 <form action="tasks.php" method="POST" class="form-inline">
                     <input type='hidden' name="_method" value='DELETE'>
                     <input type="hidden" name="task[id]" value="<?= $index ?>">
                     <input type="submit" value="Remover">
                 </form>
-                <span><?= $task ?></span>
+                <span><?= $task_->getName(); ?></span>
             </li>
         <?php endforeach ?>
     </ul>
@@ -97,8 +82,8 @@ $tasks = file(DB_PATH, FILE_IGNORE_NEW_LINES);
 
         <div class="form-group">
             <label for="task_name">Tarefa:</label>
-            <input id="task_name" type="text" name="task[name]" class="<?= isset($errors['task']['name']) ? 'is-invalid' : '' ?>">
-            <span class="invalid-feedback"><?= isset($errors['task']['name']) ? $errors['task']['name'] : '' ?></span>
+            <input id="task_name" type="text" name="task[name]" class="<?= $task->errors('name') ? 'is-invalid' : '' ?>">
+            <span class="invalid-feedback"><?= $task->errors('name') ?></span>
         </div>
 
         <input type="submit" value="Adicionar">
