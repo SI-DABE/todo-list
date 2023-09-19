@@ -45,4 +45,12 @@ class Task extends Base {
 
         return $tasks;
     }
+    public static function removeById(int $index){
+        $tasksFromFile = file(self::DB_PATH, FILE_IGNORE_NEW_LINES);
+        $acumulator = '';
+        foreach($tasksFromFile as $taskIndex => $taskName)
+            if($index !== $taskIndex)
+                $acumulator .= $taskName . PHP_EOL;
+        file_put_contents(self::DB_PATH, $acumulator, LOCK_EX);
+    }
 }
