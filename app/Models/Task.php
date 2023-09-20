@@ -1,6 +1,9 @@
 <?php
 
-require 'Base.php';
+namespace App\Models;
+
+use App\Models\Base;
+use App\Lib\Validations;
 
 class Task extends Base {
     private const DB_PATH = '../database/tasks.txt';
@@ -16,12 +19,14 @@ class Task extends Base {
     }
 
     public function validates() {
-        if (strlen($this->name) < 3) {
-            $this->errors['name'] = 'deve ter mais de três caracteres';
-        }
-        if (empty($this->name)) {
-            $this->errors['name'] = 'não pode ser vazio';
-        }
+        Validations::notEmpty($this->name, 'name', $this->errors);
+
+        // if (strlen($this->name) < 3) {
+        //     $this->errors['name'] = 'deve ter mais de três caracteres';
+        // }
+        // if (empty($this->name)) {
+        //     $this->errors['name'] = 'não pode ser vazio';
+        // }
     }
 
     public function save() {

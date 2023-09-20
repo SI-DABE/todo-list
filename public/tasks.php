@@ -1,5 +1,7 @@
 <?php
-    require '../app/models/Task.php';
+    require '../config/bootstrap.php';
+
+    use App\Models\Task;
 
     $method = $_REQUEST['_method'] ?? $_SERVER['REQUEST_METHOD'];
     
