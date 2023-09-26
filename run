@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+set -o errexit
+set -o pipefail
+
+function ps {
+    docker compose ps
+}
+
+function up {
+    docker compose up "${@}"
+}
+
+function down {
+    docker compose down "${@}"
+}
+
+function composer {
+    docker run --rm -u "$(id -u):$(id -g)" -v "$(pwd):/app" -w /app composer:2.6.3 composer "${@}"
+}
+
+function test {
+    TEST_PATH="${@:-tests}"
+    docker compose run --rm php ./vendor/bin/phpunit --color ${TEST_PATH}
+}
+
+
+TIMEFORMAT=$'\nTask completed in %3lR'
+time "${@}"
