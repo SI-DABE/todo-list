@@ -1,29 +1,30 @@
 <?php
-    require '../config/bootstrap.php';
+require '../config/bootstrap.php';
 
-    use App\Models\Task;
+use App\Models\Task;
 
-    $method = $_REQUEST['_method'] ?? $_SERVER['REQUEST_METHOD'];
-    
-    switch ($method) {
-        case 'GET':
-            echo 'GET';
-            $task = new Task();
-            break;
-        case 'POST':
-            echo 'POST';
-            $task = new Task(name: $_POST['task']['name']);
-            if ($task->save())
-                echo 'Tarefa adicionada com sucesso!';
-            else
-                echo 'Não foi possível adicionar a tarefa!';
-            break;
-        case 'DELETE': 
-            echo 'DELETE'; 
-            break;
-    }
+$method = $_REQUEST['_method'] ?? $_SERVER['REQUEST_METHOD'];
 
-    $tasks = Task::all();
+switch ($method) {
+    case 'GET':
+        echo 'GET';
+        $task = new Task();
+        break;
+    case 'POST':
+        echo 'POST';
+        $task = new Task(name: $_POST['task']['name']);
+        if ($task->save()) {
+            echo 'Tarefa adicionada com sucesso!';
+        } else {
+            echo 'Não foi possível adicionar a tarefa!';
+        }
+        break;
+    case 'DELETE':
+        echo 'DELETE';
+        break;
+}
+
+$tasks = Task::all();
 ?>
 
 <!Doctype html>

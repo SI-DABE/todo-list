@@ -16,4 +16,9 @@
 <exclude-pattern>/config/</exclude-pattern>
 <exclude-pattern>/database/</exclude-pattern>
 <exclude-pattern>/vendor/</exclude-pattern>
+
+<rule ref="Generic.Files.LineLength.TooLong">
+    <exclude-pattern>/public/tasks.php</exclude-pattern>
+</rule>
+
 </ruleset>
