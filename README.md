@@ -12,7 +12,13 @@ Aplicação Lista de Tarefas usada como exemplo na disciplina de Desenvolvimento
 ```
 $ git clone git@github.com:SI-DABE/todo-list.git
 $ cd todo-list
+$ docker compose run --rm composer composer install
 $ docker compose up -d
+```
+
+### Run tests 
+```
+$ docker compose exec php ./vendor/bin/phpunit tests --color
 ```
 
 Access http://localhost
