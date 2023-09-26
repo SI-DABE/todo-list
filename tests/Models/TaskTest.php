@@ -13,6 +13,6 @@ class TaskTest extends TestCase
 
         $task = new Task($taskName);
 
-        $this->assertSame("$taskName", $task->getName());
+        $this->assertSame('$taskName', $task->getName());
     }
 }
