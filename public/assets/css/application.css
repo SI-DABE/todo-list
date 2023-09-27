@@ -1,0 +1,27 @@
+.form-group {
+    margin-bottom: 5px;
+}
+
+.invalid-feedback {
+    color: red;
+    display: block;
+}
+
+.is-invalid {
+    border: 1px solid red;
+}
+
+.form-inline {
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.display-inline {
+    display: flex;
+    align-items: baseline;
+    gap: 3px;
+}
+
+ul li {
+    padding: 5px;
+}

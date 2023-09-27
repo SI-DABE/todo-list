@@ -2,7 +2,8 @@
     "name": "root/app",
     "autoload": {
         "psr-4": {
-            "App\\": "app/"
+            "App\\": "app/",
+            "Core\\": "core/"
         }
     },
     "require-dev": {
