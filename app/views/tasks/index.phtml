@@ -1,19 +1,19 @@
 <h1>Lista de Tarefas</h1>
 
 <ul>
-    <?php foreach ($tasks as $index => $task_) : ?>
+    <?php foreach ($tasks as $_task) : ?>
         <li>
-            <form action="tasks.php" method="POST" class="form-inline">
+            <form action="/tasks" method="POST" class="form-inline">
                 <input type='hidden' name="_method" value='DELETE'>
-                <input type="hidden" name="task[id]" value="<?= $index ?>">
+                <input type="hidden" name="task[id]" value="<?= $_task->getId() ?>">
                 <input type="submit" value="Remover">
             </form>
-            <span><?= $task_->getName(); ?></span>
+            <span><a href="/tasks/<?= $_task->getId() ?>"> <?= $_task->getName(); ?></a></span>
         </li>
     <?php endforeach ?>
 </ul>
 
-<form action="tasks.php" method="POST" class="display-inline">
+<form action="/tasks" method="POST" class="display-inline">
 
     <div class="form-group">
         <label for="task_name">Tarefa:</label>
