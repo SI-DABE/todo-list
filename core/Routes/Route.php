@@ -2,8 +2,8 @@
 
 namespace Core\Routes;
 
-use Core\Request;
-use Core\RequestFactory;
+use Core\Http\Request;
+use Core\Http\RequestFactory;
 
 use App\Controllers\NotFoundConreoller;
 class Route

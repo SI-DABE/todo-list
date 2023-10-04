@@ -1,5 +1,5 @@
 <?php
-namespace Core;
+namespace Core\Http;
 class Request{
     private $queryStrings;
     private $body;

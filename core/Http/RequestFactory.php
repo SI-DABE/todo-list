@@ -1,5 +1,5 @@
 <?php
-namespace Core;
+namespace Core\Http;
 class RequestFactory{
     public static function createRequest(){
         $request = new Request();
