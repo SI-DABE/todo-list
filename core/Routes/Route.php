@@ -8,8 +8,7 @@ use Core\Http\RequestFactory;
 use App\Controllers\NotFoundConreoller;
 class Route
 {
-    private static $routes = [];
-    private static $errorControllers = [];
+    private $errorControllers = [];
     private $subRoutes = [];
     private $controllers = [
         'GET' => [],
@@ -19,11 +18,6 @@ class Route
     ];
     private $dinamic;
     private $labels = [];
-    private static Route $instance;
-    private function __construct()
-    {
-        
-    }
     public static function explodeURI($path){
         $splitedPath = explode('/',$path);
         array_shift($splitedPath);
@@ -31,40 +25,36 @@ class Route
             array_pop($splitedPath);
         return $splitedPath;
     }
-    public static function getInstance(){
-        if(!isset(self::$instance))
-            self::$instance = new Route();
-        return self::$instance;
+    public function putErrorHandler($code, $data){
+        if(!isset($this->errorControllers[$code]))
+            $this->errorControllers[$code] = [];
+        $this->errorControllers[$code]['class'] = $data[0];
+        $this->errorControllers[$code]['action'] = $data[1];
     }
-    public static function putErrorHandler($code, $data){
-        if(!isset(self::$errorControllers[$code]))
-            self::$errorControllers[$code] = [];
-        self::$errorControllers[$code]['class'] = $data[0];
-        self::$errorControllers[$code]['action'] = $data[1];
-    }
-    public static function get($path, $data)
+    public function get($path, $data)
     {
-        self::getInstance()->addDinamicRoute($path, $data);
+        $this->addDinamicRoute($path, $data);
     }
 
-    public static function delete($path, $data)
+    public function delete($path, $data)
     {
-        self::getInstance()->addDinamicRoute($path, $data, 'DELETE');
+        $this->addDinamicRoute($path, $data, 'DELETE');
     }
 
-    public static function post($path, $data)
+    public function post($path, $data)
     {
-        self::getInstance()->addDinamicRoute($path, $data, 'POST');
+        $this->addDinamicRoute($path, $data, 'POST');
     }
-    public static function addCounstanteRoute($path, $data, $method = 'GET'){
-        self::$routes[$method][$path]['class'] = $data[0];
-        self::$routes[$method][$path]['action'] = $data[1];
+
+    public function put($path, $data)
+    {
+        $this->addDinamicRoute($path, $data, 'PUT');
     }
     public function addDinamicRoute($path, $data, $method = 'GET'){
         $splitedPath = $path === '/' ? [] : self::explodeURI($path);
-        $this->addDinamicRouteNode($splitedPath, $data, $method);
+        $this->addNode($splitedPath, $data, $method);
     }
-    public function addDinamicRouteNode($splitedPath, $data, $method = 'GET'){
+    private function addNode($splitedPath, $data, $method){
         if(count($splitedPath) === 0){
             $this->controllers[$method]['class'] = $data[0];
             $this->controllers[$method]['action'] = $data[1];
@@ -73,23 +63,21 @@ class Route
         if (preg_match('/^:[a-z,_]+$/', $splitedPath[0])){
             if(!isset($this->dinamic))
                 $this->dinamic = new Route();
+            $this->dinamic->errorControllers = $this->errorControllers;
             $this->labels[] = $splitedPath[0];
             array_shift($splitedPath);
-            $this->dinamic->addDinamicRouteNode($splitedPath, $data, $method);
+            $this->dinamic->addNode($splitedPath, $data, $method);
             return;
         } 
         $subRoute = $splitedPath[0];
         if(!isset($this->subRoutes[$subRoute]))
            $this->subRoutes[$subRoute] = new Route();
+        $this->subRoutes[$subRoute]->
+        errorControllers = $this->errorControllers;
         array_shift($splitedPath);
-        $this->subRoutes[$subRoute]->addDinamicRouteNode($splitedPath, $data, $method);
+        $this->subRoutes[$subRoute]->addNode($splitedPath, $data, $method);
     }
-    public static function load()
-    {
-        $request = RequestFactory::createRequest();
-        self::getInstance()->action($request);
-    }
-    public function action(Request $request, $path = NULL){    
+    public function action(Request $request, $path = NULL){  
         if($path === NULL)
             $path = self::explodeURI($request->getPath());
         if(count($path) > 0){
@@ -97,23 +85,29 @@ class Route
             array_shift($path);
             if(isset($this->subRoutes[$subRoute]))
                 $this->subRoutes[$subRoute]->action($request, $path);
-            elseif(isset($this->dinamic))
-            {
+            elseif(isset($this->dinamic)){
                 foreach($this->labels as $label)
                     $request->putParam($label, $subRoute);
                 $this->dinamic->action($request, $path);
-            }else
-                $this->runController(self::$errorControllers, 'not_found');
-        }else
-        $this->runController(
-            $this->controllers,
-            $request->getMethod(),
-            $request->getParams()
-        );
+            }
+        }else{ 
+            $method = $request->getMethod();
+            if($this->controllers[$method])
+                $this->runController($method, $request->getParams());
+            else
+                $this->runErrorController('not_found', $request->getParams());
+        }
     }
-    public function runController($from, $method, $params = NULL){
-        $class  = $from[$method]['class'];
-        $action = $from[$method]['action'];
+    private function runController($method, $params = NULL){
+        $class  = $this->controllers[$method]['class'];
+        $action = $this->controllers[$method]['action'];
+        $controller = new $class();
+        $controller->setParams($params);
+        $controller->$action();
+    }
+    private function runErrorController($name, $params = NULL){
+        $class  = $this->errorControllers[$name]['class'];
+        $action = $this->errorControllers[$name]['action'];
         $controller = new $class();
         $controller->setParams($params);
         $controller->$action();
