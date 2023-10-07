@@ -89,7 +89,8 @@ class Route
                 foreach($this->labels as $label)
                     $request->putParam($label, $subRoute);
                 $this->dinamic->action($request, $path);
-            }
+            }else
+                $this->runErrorController('not_found', $request->getParams());
         }else{ 
             $method = $request->getMethod();
             if($this->controllers[$method])
