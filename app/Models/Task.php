@@ -25,7 +25,8 @@ class Task extends Base
         return $this->name;
     }
 
-    public function getId(): int {
+    public function getId(): int
+    {
         return $this->id;
     }
 
@@ -53,9 +54,10 @@ class Task extends Base
         return false;
     }
 
-    public function destroy() {
+    public function destroy()
+    {
         $pdo = Database::getConnection();
-        
+
         $sql = 'DELETE FROM tasks WHERE id = :id';
         $stmt = $pdo->prepare($sql);
         $stmt->bindParam(':id', $this->id);
@@ -65,16 +67,19 @@ class Task extends Base
         return ($stmt->rowCount() != 0);
     }
 
-    public static function findById(int $id): Task | null {
+    public static function findById(int $id): Task | null
+    {
         $pdo = Database::getConnection();
-        
+
         $sql = 'SELECT id, name FROM tasks WHERE id = :id';
         $stmt = $pdo->prepare($sql);
         $stmt->bindParam(':id', $id);
 
         $stmt->execute();
 
-        if ($stmt->rowCount() == 0) return null;
+        if ($stmt->rowCount() == 0) {
+            return null;
+        }
 
         $row = $stmt->fetch();
 
@@ -88,7 +93,7 @@ class Task extends Base
         $pdo = Database::getConnection();
         $resp = $pdo->query('SELECT id, name FROM tasks');
 
-        foreach($resp as $row) {
+        foreach ($resp as $row) {
             $tasks[] = new Task(id: $row['id'], name: $row['name']);
         }
 

@@ -14,11 +14,13 @@ class BaseController
         require ROOT_PATH . '/app/views/layouts/' . $this->layout .  '.phtml';
     }
 
-    public function setParams(array $params) {
+    public function setParams(array $params)
+    {
         $this->params = $params;
     }
-    
-    protected function redirectTo(string $address) {
+
+    protected function redirectTo(string $address)
+    {
         header('location: ' . $address);
         exit();
     }

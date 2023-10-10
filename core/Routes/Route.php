@@ -2,6 +2,8 @@
 
 namespace Core\Routes;
 
+use Exception;
+
 class Route
 {
     private static $routes = [];
@@ -28,34 +30,43 @@ class Route
     {
         $method = $_REQUEST['_method'] ?? $_SERVER['REQUEST_METHOD'];
         $path = strtok($_SERVER['REQUEST_URI'], '?');
-        $splitedPath = explode('/', $path);
 
         $routes = self::$routes[$method];
         $params = [];
-        $rightRoute = null;
 
-        foreach($routes as $route => $data) {
-            $splitedRoute = explode('/', $route);
+        foreach ($routes as $route => $data) {
+            if (self::isRightRoute($route, $path, $params)) {
+                $class = self::$routes[$method][$route]['class'];
+                $action = self::$routes[$method][$route]['action'];
 
-            if (sizeof($splitedRoute) !== sizeof($splitedPath))
-                continue;
+                $controller = new $class();
+                $controller->setParams($params + $_GET + $_POST);
+                $controller->$action();
 
-            for ($i = 0; $i < sizeof($splitedRoute); $i++) { 
-                if (preg_match('/^:[a-z,_]+$/', $splitedRoute[$i])){
-                   $params[$splitedRoute[$i]] = $splitedPath[$i];
-                } elseif ($splitedRoute[$i] !== $splitedPath[$i]) {
-                    break;
-                }
+                return;
             }
-
-            $rightRoute = $route;
         }
 
-        $class = self::$routes[$method][$rightRoute]['class'];
-        $action = self::$routes[$method][$rightRoute]['action'];
+        throw new Exception("Route not Found: {$path}", 404);
+    }
 
-        $controller = new $class();
-        $controller->setParams($params + $_GET + $_POST);
-        $controller->$action();
+    private static function isRightRoute($route, $path, &$params)
+    {
+        $splitedRoute = explode('/', $route);
+        $splitedPath = explode('/', $path);
+
+        if (sizeof($splitedRoute) !== sizeof($splitedPath)) {
+            return false;
+        }
+
+        for ($i = 0; $i < sizeof($splitedRoute); $i++) {
+            if (preg_match('/^:[a-z,_]+$/', $splitedRoute[$i])) {
+                $params[$splitedRoute[$i]] = $splitedPath[$i];
+            } elseif ($splitedRoute[$i] !== $splitedPath[$i]) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
