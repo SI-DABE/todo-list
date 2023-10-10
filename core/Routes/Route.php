@@ -25,7 +25,7 @@ class Route
             array_pop($splitedPath);
         return $splitedPath;
     }
-    public function putErrorHandler($code, $data){
+    public function putErrorController($code, $data){
         if(!isset($this->errorControllers[$code]))
             $this->errorControllers[$code] = [];
         $this->errorControllers[$code]['class'] = $data[0];
