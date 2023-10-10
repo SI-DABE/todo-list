@@ -1,0 +1,25 @@
+<h1>Lista de Tarefas</h1>
+
+<ul>
+    <?php foreach ($tasks as $_task) : ?>
+        <li>
+            <form action="/tasks" method="POST" class="form-inline">
+                <input type='hidden' name="_method" value='DELETE'>
+                <input type="hidden" name="task[id]" value="<?= $_task->getId() ?>">
+                <input type="submit" value="Remover">
+            </form>
+            <span><a href="/tasks/<?= $_task->getId() ?>"> <?= $_task->getName(); ?></a></span>
+        </li>
+    <?php endforeach ?>
+</ul>
+
+<form action="/tasks" method="POST" class="display-inline">
+
+    <div class="form-group">
+        <label for="task_name">Tarefa:</label>
+        <input id="task_name" type="text" name="task[name]" class="<?= $task->errors('name') ? 'is-invalid' : '' ?>">
+        <span class="invalid-feedback"><?= $task->errors('name') ?></span>
+    </div>
+
+    <input type="submit" value="Adicionar">
+</form>
