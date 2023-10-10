@@ -4,6 +4,8 @@ namespace App\Models;
 
 use App\Models\Base;
 use App\Lib\Validations;
+use Core\Db\Database;
+use PDO;
 
 class Task extends Base
 {
@@ -30,23 +32,21 @@ class Task extends Base
     public function validates()
     {
         Validations::notEmpty($this->name, 'name', $this->errors);
-
-        // if (strlen($this->name) < 3) {
-        //     $this->errors['name'] = 'deve ter mais de três caracteres';
-        // }
-        // if (empty($this->name)) {
-        //     $this->errors['name'] = 'não pode ser vazio';
-        // }
     }
 
     public function save()
     {
         if ($this->isValid()) {
-            file_put_contents(
-                self::DB_PATH,
-                $this->name . PHP_EOL,
-                FILE_APPEND | LOCK_EX
-            );
+            $pdo = Database::getConnection();
+
+            $sql = "INSERT INTO tasks (name) VALUES (:name);";
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(':name', $this->name);
+
+            $stmt->execute();
+
+            $this->id = $pdo->lastInsertId();
+
             return true;
         }
 
@@ -54,34 +54,42 @@ class Task extends Base
     }
 
     public function destroy() {
-        $lines = file(self::DB_PATH, FILE_IGNORE_NEW_LINES);
+        $pdo = Database::getConnection();
+        
+        $sql = 'DELETE FROM tasks WHERE id = :id';
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(':id', $this->id);
 
-        foreach ($lines as $index => $line) {
-            if ($index === $this->id) unset($lines[$index]);
-        }
+        $stmt->execute();
 
-        $data = implode(PHP_EOL, $lines);
-        file_put_contents(self::DB_PATH, $data . PHP_EOL);
+        return ($stmt->rowCount() != 0);
     }
 
     public static function findById(int $id): Task | null {
-        $tasksFromFile = file(self::DB_PATH, FILE_IGNORE_NEW_LINES);
+        $pdo = Database::getConnection();
+        
+        $sql = 'SELECT id, name FROM tasks WHERE id = :id';
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(':id', $id);
 
-        foreach ($tasksFromFile as $index => $taskName) {
-            if ($id == $index)
-                return new Task(name: $taskName, id: $index);
-        }
+        $stmt->execute();
 
-        return null;
+        if ($stmt->rowCount() == 0) return null;
+
+        $row = $stmt->fetch();
+
+        return new Task(id: $row['id'], name: $row['name']);
     }
 
     public static function all()
     {
         $tasks = [];
 
-        $tasksFromFile = file(self::DB_PATH, FILE_IGNORE_NEW_LINES);
-        foreach ($tasksFromFile as $index => $taskName) {
-            $tasks[] = new Task(name: $taskName, id: $index);
+        $pdo = Database::getConnection();
+        $resp = $pdo->query('SELECT id, name FROM tasks');
+
+        foreach($resp as $row) {
+            $tasks[] = new Task(id: $row['id'], name: $row['name']);
         }
 
         return $tasks;

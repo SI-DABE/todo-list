@@ -1,0 +1,20 @@
+<?php
+
+namespace Core\Db;
+
+use PDO;
+
+class Database {
+    public static function getConnection() {
+        $user = $_ENV['DB_USERNAME'];
+        $pwd  = $_ENV['DB_PASSWORD'];
+        $host = $_ENV['DB_HOST'];
+        $port = $_ENV['DB_PORT'];
+        $db   = $_ENV['DB_DATABASE'];
+        
+        $pdo = new PDO('mysql:host='. $host .';port=' . $port . ';dbname=' . $db, $user, $pwd);
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+        return $pdo;
+    }
+}

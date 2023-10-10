@@ -3,6 +3,8 @@
 set -o errexit
 set -o pipefail
 
+source .env
+
 function ps {
     docker compose ps
 }
@@ -32,6 +34,15 @@ function phpcs {
 function phpcbf {
     TEST_PATH="${@:-.}"
     docker compose run --rm php ./vendor/bin/phpcbf ${TEST_PATH}
+}
+
+function db:reset {
+    docker compose cp database/schema.sql db:/tmp/
+    docker compose exec db sh -c "MYSQL_PWD=${DB_PASSWORD} mysql -u ${DB_USERNAME} -p${DB_PASSWORD} < /tmp/schema.sql"
+}
+
+function mysql {
+    docker compose exec db sh -c "MYSQL_PWD=${DB_PASSWORD} mysql -u ${DB_USERNAME} ${DB_DATABASE}"
 }
 
 TIMEFORMAT=$'\nTask completed in %3lR'
