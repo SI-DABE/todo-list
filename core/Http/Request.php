@@ -1,6 +1,9 @@
 <?php
+
 namespace Core\Http;
-class Request{
+
+class Request
+{
     private $queryStrings;
     private $body;
     private $headers;
@@ -8,50 +11,65 @@ class Request{
     private $path;
     private $hostName;
     private $params;
-    public const ALLOWED_METHODS = ['GET', 'POST', 'PUT', 'DELETE']; 
-    public function getQerryStrings(){
+    public const ALLOWED_METHODS = ['GET', 'POST', 'PUT', 'DELETE'];
+    public function getQerryStrings()
+    {
         return $this->queryStrings;
     }
-    public function getBody(){
+    public function getBody()
+    {
         return $this->body;
     }
-    public function getMethod(){
+    public function getMethod()
+    {
         return $this->method;
     }
-    public function getHostName(){
+    public function getHostName()
+    {
         return $this->hostName;
     }
-    public function getParams(){
+    public function getParams()
+    {
         return $this->params;
     }
-    public function getHeaders(){
+    public function getHeaders()
+    {
         return $this->headers;
     }
-    public function setQerryStrings($queryStrings){
+    public function setQerryStrings($queryStrings)
+    {
         $this->queryStrings = $queryStrings;
     }
-    public function setBody($body){
+    public function setBody($body)
+    {
         $this->body = $body;
     }
-    public function setMethod($method){
+    public function setMethod($method)
+    {
         $this->method = $method;
     }
-    public function setHostName($hostName){
+    public function setHostName($hostName)
+    {
         $this->hostName = $hostName;
     }
-    public function setParams($params){
+    public function setParams($params)
+    {
         $this->params = $params;
     }
-    public function setHeaders($headers){
+    public function setHeaders($headers)
+    {
         $this->headers = $headers;
     }
-    public function putParam($name,$param){
+    public function putParam($name, $param)
+    {
         $this->params[$name] = $param;
     }
-    public function getPath(){
+    public function getPath()
+    {
         return $this->path;
     }
-    public function setPath($path){
+    public function setPath($path)
+    {
         $this->path = $path;
     }
 }
