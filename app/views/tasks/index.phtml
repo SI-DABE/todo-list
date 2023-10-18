@@ -23,11 +23,3 @@
 
     <input type="submit" value="Adicionar">
 </form>
-
-<h2>Últimas tarefas visualizadas</h2>
-
-<ul>
-    <?php foreach($taskAccessHistory as $id => $name): ?>
-        <li><a href="/tasks/<?= $id ?>"> <?= $name ?></a></li>
-    <?php endforeach ?>
-</ul>

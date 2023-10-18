@@ -9,19 +9,17 @@ class TasksController extends BaseController
 {
     public function index()
     {
+        $this->authenticated();
+
         $task = new Task();
         $tasks = Task::all();
 
-        $taskAccessHistory = $_COOKIE['tasks'] ?? [];
-
-        $this->render('tasks/index', compact('task', 'tasks', 'taskAccessHistory'));
+        $this->render('tasks/index', compact('task', 'tasks'));
     }
 
     public function show()
     {
         $task = Task::findById($this->params[':id']);
-
-        setcookie("tasks[{$task->getId()}]", $task->getName(), strtotime('+1 days'), '/');
 
         $this->render('tasks/show', ['task' => $task]);
     }
@@ -37,9 +35,9 @@ class TasksController extends BaseController
         } else {
             Flash::message('danger', 'Dados incorretos!');
             $this->render('tasks/index', [
-                  'task' => $task,
-                  'tasks' => $tasks
-                ]);
+                'task' => $task,
+                'tasks' => $tasks
+            ]);
         }
     }
 

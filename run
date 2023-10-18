@@ -38,7 +38,7 @@ function phpcbf {
 
 function db:reset {
     docker compose cp database/schema.sql db:/tmp/
-    docker compose exec db sh -c "MYSQL_PWD=${DB_PASSWORD} mysql -u ${DB_USERNAME} -p${DB_PASSWORD} < /tmp/schema.sql"
+    docker compose exec db sh -c "MYSQL_PWD=${DB_PASSWORD} mysql -u ${DB_USERNAME} < /tmp/schema.sql"
 }
 
 function mysql {

@@ -9,25 +9,17 @@ use PDO;
 
 class Task extends Base
 {
-    private const DB_PATH = '../database/tasks.txt';
-
     private string $name;
-    private int $id;
 
     public function __construct(string $name = '', int $id = -1)
     {
+        parent::__construct($id);
         $this->name = trim($name);
-        $this->id = $id;
     }
 
     public function getName(): string
     {
         return $this->name;
-    }
-
-    public function getId(): int
-    {
-        return $this->id;
     }
 
     public function validates()
@@ -46,7 +38,7 @@ class Task extends Base
 
             $stmt->execute();
 
-            $this->id = $pdo->lastInsertId();
+            $this->setId($pdo->lastInsertId());
 
             return true;
         }
@@ -60,7 +52,7 @@ class Task extends Base
 
         $sql = 'DELETE FROM tasks WHERE id = :id';
         $stmt = $pdo->prepare($sql);
-        $stmt->bindParam(':id', $this->id);
+        $stmt->bindParam(':id', $this->getId());
 
         $stmt->execute();
 

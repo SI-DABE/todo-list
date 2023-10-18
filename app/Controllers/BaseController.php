@@ -2,10 +2,14 @@
 
 namespace App\Controllers;
 
+use App\Lib\Flash;
+use App\Models\User;
+
 class BaseController
 {
     protected $layout = 'application';
     protected $params = [];
+    private $currentUser = null;
 
     public function render($view, $data = [])
     {
@@ -23,5 +27,23 @@ class BaseController
     {
         header('location: ' . $address);
         exit();
+    }
+
+    public function currentUser()
+    {
+        if ($this->currentUser === null && isset($_SESSION['user']['id'])) {
+            $id = $_SESSION['user']['id'];
+            $this->currentUser = User::findById($id);
+        }
+
+        return $this->currentUser;
+    }
+
+    public function authenticated()
+    {
+        if ($this->currentUser() === null) {
+            Flash::message('danger', 'Você deve estar logado para acessar essa página');
+            $this->redirectTo('/login');
+        }
     }
 }

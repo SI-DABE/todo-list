@@ -4,7 +4,13 @@ namespace App\Models;
 
 abstract class Base
 {
+    private int $id;
     protected array $errors = [];
+
+    public function __construct(int $id = -1)
+    {
+        $this->id = $id;
+    }
 
     public function isValid()
     {
@@ -23,5 +29,17 @@ abstract class Base
         return null;
     }
 
-    abstract public function validates();
+    public function validates()
+    {
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    public function setId(int $id)
+    {
+        $this->id = $id;
+    }
 }

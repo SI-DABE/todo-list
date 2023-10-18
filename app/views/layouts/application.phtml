@@ -9,7 +9,17 @@
 <link rel="stylesheet" type="text/css" href="/assets/css/application.css">
 
 <body>
-    <?php foreach(\App\Lib\Flash::message() as $type => $msg): ?>
+
+    <?php if ($this->currentUser) : ?>
+        Olá <?= $this->currentUser->getName(); ?>
+        <a href="/logout">Sair</a>
+    <?php else : ?>
+        <a href="/login">Entrar</a>
+    <?php endif ?>
+
+    <hr>
+
+    <?php foreach (\App\Lib\Flash::message() as $type => $msg) : ?>
         <div class="alert alert-<?= $type ?>" role="alert">
             <?= $msg ?>
         </div>
