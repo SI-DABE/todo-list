@@ -2,6 +2,11 @@
 
 use Core\Routes\Route;
 
+Route::get('/',          [App\Controllers\HomeController::class, 'index']);
+
+Route::get('/sign-up',   [App\Controllers\UsersController::class, 'new']);
+Route::post('/sign-up',  [App\Controllers\UsersController::class, 'create']);
+
 Route::get('/login',     [App\Controllers\AuthController::class, 'new']);
 Route::post('/login',    [App\Controllers\AuthController::class, 'create']);
 Route::get('/logout',    [App\Controllers\AuthController::class, 'destroy']);

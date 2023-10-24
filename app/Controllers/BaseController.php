@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Lib\Flash;
+use App\Lib\SimpleForm;
 use App\Models\User;
 
 class BaseController
@@ -13,6 +14,7 @@ class BaseController
 
     public function render($view, $data = [])
     {
+        $simpleForm = new SimpleForm();
         extract($data);
         $view = ROOT_PATH . '/app/views/' . $view .  '.phtml';
         require ROOT_PATH . '/app/views/layouts/' . $this->layout .  '.phtml';

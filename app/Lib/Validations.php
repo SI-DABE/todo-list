@@ -13,4 +13,14 @@ class Validations
 
         return true;
     }
+
+    public static function passwordConfirmation($password, $passwordConfirmation, $key, &$errors)
+    {
+        if ($password !== $passwordConfirmation) {
+            $errors[$key] = 'as senhas devem ser idênticas';
+            return false;
+        }
+
+        return true;
+    }
 }

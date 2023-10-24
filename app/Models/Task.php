@@ -52,7 +52,7 @@ class Task extends Base
 
         $sql = 'DELETE FROM tasks WHERE id = :id';
         $stmt = $pdo->prepare($sql);
-        $stmt->bindParam(':id', $this->getId());
+        $stmt->bindValue(':id', $this->getId());
 
         $stmt->execute();
 

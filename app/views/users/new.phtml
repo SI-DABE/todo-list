@@ -1,0 +1,10 @@
+<?php $simpleForm->for($user, '/sign-up', 'POST', function ($form) use ($user) { ?>
+
+    <?= $form->inputFor('name', 'Nome') ?>
+    <?= $form->inputFor('email', 'Email', 'email') ?>
+    <?= $form->inputFor('password', 'Senha', 'password') ?>
+    <?= $form->inputFor('password_confirmation', 'Confirmação de Senha', 'password') ?>
+
+    <?= $form->submit('Registrar-se') ?>
+
+<?php }) ?>

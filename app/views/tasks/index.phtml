@@ -13,13 +13,9 @@
     <?php endforeach ?>
 </ul>
 
-<form action="/tasks" method="POST" class="display-inline">
+<?php $simpleForm->for($task, '/tasks', 'POST', function ($form) use ($task) { ?>
 
-    <div class="form-group">
-        <label for="task_name">Tarefa:</label>
-        <input id="task_name" type="text" name="task[name]" class="<?= $task->errors('name') ? 'is-invalid' : '' ?>">
-        <span class="invalid-feedback"><?= $task->errors('name') ?></span>
-    </div>
+    <?= $form->inputFor('name', 'Nome') ?>
+    <?= $form->submit('Adicionar') ?>
 
-    <input type="submit" value="Adicionar">
-</form>
+<?php }) ?>
