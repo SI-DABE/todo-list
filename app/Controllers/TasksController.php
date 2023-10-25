@@ -12,22 +12,35 @@ class TasksController extends BaseController
         $this->authenticated();
 
         $task = new Task();
-        $tasks = Task::all();
+        $tasks = $this->currentUser()->tasks();
 
         $this->render('tasks/index', compact('task', 'tasks'));
     }
 
     public function show()
     {
-        $task = Task::findById($this->params[':id']);
+        $this->authenticated();
+
+        $task = Task::findBy(
+            [
+                'id' => $this->params[':id'],
+                'user_id' => $this->currentUser()->getId()
+            ]
+        );
 
         $this->render('tasks/show', ['task' => $task]);
     }
 
     public function create()
     {
-        $task = new Task(name: $this->params['task']['name']);
-        $tasks = Task::all();
+        $this->authenticated();
+
+        $task = new Task(
+            name: $this->params['task']['name'],
+            userId: $this->currentUser()->getId()
+        );
+
+        $tasks = $this->currentUser()->tasks();
 
         if ($task->save()) {
             Flash::message('success', 'Tarefa registrada com sucesso!');
@@ -43,8 +56,15 @@ class TasksController extends BaseController
 
     public function destroy()
     {
-        $id = $this->params['task']['id'];
-        $task = Task::findById($id);
+        $this->authenticated();
+
+        $task = Task::findBy(
+            [
+                'id' => $this->params[':id'],
+                'user_id' => $this->currentUser()->getId()
+            ]
+        );
+
         $task->destroy();
 
         Flash::message('success', 'Tarefa removida com sucesso!');

@@ -90,6 +90,11 @@ class User extends Base
         return false;
     }
 
+    public function tasks()
+    {
+        return Task::where(['user_id' => $this->getId()]);
+    }
+
     public static function findByEmail(string $email): User | null
     {
         $pdo = Database::getConnection();

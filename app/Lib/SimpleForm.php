@@ -7,7 +7,6 @@ use ReflectionClass;
 
 class SimpleForm
 {
-
     private $object;
 
     public function for($object, $url, $method, Closure $callBack)
@@ -26,6 +25,7 @@ class SimpleForm
                 <label for="{$this->id($attribute)}">{$name}</label>
                 <input id="{$this->id($attribute)}" 
                        type="{$type}"
+                       value="{$this->getValue($attribute,$type)}"
                        name="{$this->name($attribute)}"
                        class="{$this->classWhenError($attribute)}">
                 <span class="invalid-feedback">{$this->object->errors($attribute)}</span>
@@ -38,6 +38,16 @@ class SimpleForm
         return <<<HTML
             <input type="submit" value="{$value}">
         HTML;
+    }
+
+    private function getValue($attribute, $type)
+    {
+        if ($type === 'password') {
+            return '';
+        }
+
+        $method = 'get' . $attribute;
+        return $this->object->$method();
     }
 
     private function classWhenError($attribute)

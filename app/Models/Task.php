@@ -10,11 +10,16 @@ use PDO;
 class Task extends Base
 {
     private string $name;
+    private int $userId;
 
-    public function __construct(string $name = '', int $id = -1)
-    {
+    public function __construct(
+        string $name = '',
+        int $id = -1,
+        int $userId = -1
+    ) {
         parent::__construct($id);
         $this->name = trim($name);
+        $this->userId = $userId;
     }
 
     public function getName(): string
@@ -32,9 +37,10 @@ class Task extends Base
         if ($this->isValid()) {
             $pdo = Database::getConnection();
 
-            $sql = "INSERT INTO tasks (name) VALUES (:name);";
+            $sql = "INSERT INTO tasks (name, user_id) VALUES (:name, :user_id);";
             $stmt = $pdo->prepare($sql);
-            $stmt->bindParam(':name', $this->name);
+            $stmt->bindValue(':name', $this->name);
+            $stmt->bindValue(':user_id', $this->userId);
 
             $stmt->execute();
 
@@ -59,11 +65,47 @@ class Task extends Base
         return ($stmt->rowCount() != 0);
     }
 
+    public static function where($conditions)
+    {
+        $sql = 'SELECT id, name, user_id FROM tasks WHERE ';
+        $sqlConditions = array_map(function ($column) {
+            return "{$column} = :{$column}";
+        }, array_keys($conditions));
+
+        $sql .= implode(' AND ', $sqlConditions);
+
+        $pdo = Database::getConnection();
+        $stmt = $pdo->prepare($sql);
+
+        foreach ($conditions as $column => $value) {
+            $stmt->bindValue($column, $value);
+        }
+
+        $stmt->execute();
+        $rows = $stmt->fetchAll();
+
+        $tasks = [];
+        foreach ($rows as $row) {
+            $tasks[] = new Task(
+                id: $row['id'],
+                name: $row['name'],
+                userId: $row['user_id']
+            );
+        }
+        return $tasks;
+    }
+
+
+    public static function findBy($conditions)
+    {
+        return self::where($conditions)[0];
+    }
+
     public static function findById(int $id): Task | null
     {
         $pdo = Database::getConnection();
 
-        $sql = 'SELECT id, name FROM tasks WHERE id = :id';
+        $sql = 'SELECT id, name, user_id FROM tasks WHERE id = :id';
         $stmt = $pdo->prepare($sql);
         $stmt->bindParam(':id', $id);
 
@@ -75,7 +117,11 @@ class Task extends Base
 
         $row = $stmt->fetch();
 
-        return new Task(id: $row['id'], name: $row['name']);
+        return new Task(
+            id: $row['id'],
+            name: $row['name'],
+            userId: $row['user_id']
+        );
     }
 
     public static function all()
@@ -86,7 +132,11 @@ class Task extends Base
         $resp = $pdo->query('SELECT id, name FROM tasks');
 
         foreach ($resp as $row) {
-            $tasks[] = new Task(id: $row['id'], name: $row['name']);
+            $tasks[] = new Task(
+                id: $row['id'],
+                name: $row['name'],
+                userId: $row['user_id']
+            );
         }
 
         return $tasks;
