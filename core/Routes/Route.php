@@ -2,7 +2,7 @@
 
 namespace Core\Routes;
 
-use Exception;
+use Core\Exceptions\ExceptionWithHTTPStatus;
 
 class Route
 {
@@ -47,7 +47,7 @@ class Route
             }
         }
 
-        throw new Exception("Route not Found: {$path}", 404);
+        throw new ExceptionWithHTTPStatus("Route not Found: {$path}", 404);
     }
 
     private static function isRightRoute($route, $path, &$params)
