@@ -52,7 +52,7 @@ class User extends Base
 
     public function authenticate(string $password)
     {
-        $pdo = Database::getConnection();
+        $pdo = Database::getDBConnection();
 
         $sql = 'SELECT password FROM users WHERE email = :email';
         $stmt = $pdo->prepare($sql);
@@ -72,7 +72,7 @@ class User extends Base
     public function save()
     {
         if ($this->isValid()) {
-            $pdo = Database::getConnection();
+            $pdo = Database::getDBConnection();
 
             $sql = "INSERT INTO users (name, email, password) VALUES (:name, :email, :password);";
             $stmt = $pdo->prepare($sql);
@@ -97,7 +97,7 @@ class User extends Base
 
     public static function findByEmail(string $email): User | null
     {
-        $pdo = Database::getConnection();
+        $pdo = Database::getDBConnection();
 
         $sql = 'SELECT id, name, email FROM users WHERE email = :email';
         $stmt = $pdo->prepare($sql);
@@ -116,7 +116,7 @@ class User extends Base
 
     public static function findById(int $id): User | null
     {
-        $pdo = Database::getConnection();
+        $pdo = Database::getDBConnection();
 
         $sql = 'SELECT id, name, email FROM users WHERE id = :id';
         $stmt = $pdo->prepare($sql);

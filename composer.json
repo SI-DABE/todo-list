@@ -3,7 +3,8 @@
     "autoload": {
         "psr-4": {
             "App\\": "app/",
-            "Core\\": "core/"
+            "Core\\": "core/",
+            "Tests\\": "tests/"
         }
     },
     "require-dev": {

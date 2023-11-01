@@ -2,17 +2,27 @@
 
 namespace Tests\Models;
 
-use PHPUnit\Framework\TestCase;
 use App\Models\Task;
+use Tests\TestCase;
 
 class TaskTest extends TestCase
 {
-    public function testCanSetTaskName(): void
+    public function testShouldSaveTask(): void
     {
         $taskName = 'Estudar composer';
+        $task = new Task(name: $taskName);
 
-        $task = new Task($taskName);
+        $this->assertTrue($task->save());
+        $this->assertNotEquals(-1, $task->getId());
+        $this->assertEquals(1, sizeof(Task::all()));
+    }
 
-        $this->assertSame($taskName, $task->getName());
+    public function testShouldReturnAllTheTasks(): void
+    {
+        for ($i = 0; $i < 5; $i++) {
+            $task = new Task(name: 'Task ' . $i);
+            $task->save();
+        }
+        $this->assertEquals(5, sizeof(Task::all()));
     }
 }

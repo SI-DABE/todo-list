@@ -35,7 +35,7 @@ class Task extends Base
     public function save()
     {
         if ($this->isValid()) {
-            $pdo = Database::getConnection();
+            $pdo = Database::getDBConnection();
 
             $sql = "INSERT INTO tasks (name, user_id) VALUES (:name, :user_id);";
             $stmt = $pdo->prepare($sql);
@@ -54,7 +54,7 @@ class Task extends Base
 
     public function destroy()
     {
-        $pdo = Database::getConnection();
+        $pdo = Database::getDBConnection();
 
         $sql = 'DELETE FROM tasks WHERE id = :id';
         $stmt = $pdo->prepare($sql);
@@ -74,7 +74,7 @@ class Task extends Base
 
         $sql .= implode(' AND ', $sqlConditions);
 
-        $pdo = Database::getConnection();
+        $pdo = Database::getDBConnection();
         $stmt = $pdo->prepare($sql);
 
         foreach ($conditions as $column => $value) {
@@ -103,7 +103,7 @@ class Task extends Base
 
     public static function findById(int $id): Task | null
     {
-        $pdo = Database::getConnection();
+        $pdo = Database::getDBConnection();
 
         $sql = 'SELECT id, name, user_id FROM tasks WHERE id = :id';
         $stmt = $pdo->prepare($sql);
@@ -128,8 +128,8 @@ class Task extends Base
     {
         $tasks = [];
 
-        $pdo = Database::getConnection();
-        $resp = $pdo->query('SELECT id, name FROM tasks');
+        $pdo = Database::getDBConnection();
+        $resp = $pdo->query('SELECT id, name, user_id FROM tasks');
 
         foreach ($resp as $row) {
             $tasks[] = new Task(

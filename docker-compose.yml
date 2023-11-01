@@ -9,7 +9,7 @@ services:
       - 80:80
     networks:
       - app-network
-  
+
   php:
     build:
       context: .
@@ -25,7 +25,7 @@ services:
     env_file:
       - .env
     environment:
-      MYSQL_DATABASE: "$DB_HOST"
+      MYSQL_DATABASE: "$DB_DATABASE"
       MYSQL_ALLOW_EMPTY_PASSWORD: yes
       MYSQL_USER: "$DB_USERNAME"
       MYSQL_PASSWORD: "$DB_PASSWORD"

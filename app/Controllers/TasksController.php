@@ -60,7 +60,7 @@ class TasksController extends BaseController
 
         $task = Task::findBy(
             [
-                'id' => $this->params[':id'],
+                'id' => $this->params['task']['id'],
                 'user_id' => $this->currentUser()->getId()
             ]
         );
