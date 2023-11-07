@@ -27,7 +27,6 @@ class TasksController extends BaseController
                 'user_id' => $this->currentUser()->getId()
             ]
         );
-
         $this->render('tasks/show', ['task' => $task]);
     }
 
@@ -37,7 +36,7 @@ class TasksController extends BaseController
 
         $task = new Task(
             name: $this->params['task']['name'],
-            userId: $this->currentUser()->getId()
+            user_id: $this->currentUser()->getId()
         );
 
         $tasks = $this->currentUser()->tasks();
