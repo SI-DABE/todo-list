@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Base;
 use App\Lib\Validations;
+use App\Services\TaskUsersService;
 
 class Task extends Base
 {
@@ -27,5 +28,10 @@ class Task extends Base
     public function validates()
     {
         Validations::notEmpty($this->name, 'name', $this->errors);
+    }
+
+    public function collaborators()
+    {
+        return new TaskUsersService($this);
     }
 }

@@ -35,6 +35,11 @@ abstract class Base
         return null;
     }
 
+    public function addError($index, $error)
+    {
+        return $this->errors[$index] = $error;
+    }
+
     public function validates()
     {
     }
@@ -52,6 +57,11 @@ abstract class Base
     public function newRecord()
     {
         return ($this->id === -1);
+    }
+
+    public function getTable()
+    {
+        return static::$table;
     }
 
     public function save()

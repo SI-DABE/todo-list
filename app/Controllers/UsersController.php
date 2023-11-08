@@ -20,7 +20,7 @@ class UsersController extends BaseController
             name: $this->params['user']['name'],
             email: $this->params['user']['email'],
             password: $this->params['user']['password'],
-            passwordConfirmation: $this->params['user']['password_confirmation']
+            password_confirmation: $this->params['user']['password_confirmation']
         );
 
         if ($user->save()) {

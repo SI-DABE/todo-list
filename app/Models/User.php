@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Lib\Validations;
 use App\Models\Base;
+use App\Services\UserTasksService;
 
 class User extends Base
 {
@@ -57,7 +58,7 @@ class User extends Base
 
     public function tasks()
     {
-        return Task::where(['user_id' => $this->getId()]);
+        return new UserTasksService($this);
     }
 
     public static function findByEmail(string $email): User | null
