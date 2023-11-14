@@ -45,3 +45,9 @@ ul li {
     background-color: #d4edda;
     border-color: #c3e6cb;
 }
+
+.pagination {
+    display: flex;
+    list-style: none;
+    padding-left: 0;
+}

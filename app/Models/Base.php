@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Lib\Paginator;
 use Core\Db\Database;
 use PDO;
 
@@ -59,9 +60,14 @@ abstract class Base
         return ($this->id === -1);
     }
 
-    public function getTable()
+    public static function getTable()
     {
         return static::$table;
+    }
+
+    public static function getAttributes()
+    {
+        return static::$attributes;
     }
 
     public function save()
@@ -196,5 +202,11 @@ abstract class Base
         $row = $stmt->fetch(PDO::FETCH_NUM);
 
         return new static(...$row);
+    }
+
+
+    public static function paginator($page, $per_page)
+    {
+        return new Paginator(static::class, $page, $per_page);
     }
 }

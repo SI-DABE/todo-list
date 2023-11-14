@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Lib\Paginator;
 use App\Models\Base;
 use App\Lib\Validations;
 use App\Services\TaskUsersService;
