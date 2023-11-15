@@ -7,7 +7,8 @@ CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     email VARCHAR(50) UNIQUE NOT NULL,
-    password VARCHAR(65) NOT NULL
+    password VARCHAR(65) NOT NULL,
+    avatar_name VARCHAR(65)
 );
 
 DROP TABLE IF EXISTS tasks;

@@ -11,6 +11,9 @@ Route::get('/login',     [App\Controllers\AuthController::class, 'new']);
 Route::post('/login',    [App\Controllers\AuthController::class, 'create']);
 Route::get('/logout',    [App\Controllers\AuthController::class, 'destroy']);
 
+Route::get('/profile',   [App\Controllers\ProfileController::class, 'show']);
+Route::post('/profile',  [App\Controllers\ProfileController::class, 'updateAvatar']);
+
 Route::get('/tasks',     [App\Controllers\TasksController::class, 'index']);
 Route::get('/tasks/:id', [App\Controllers\TasksController::class, 'show']);
 Route::post('/tasks',    [App\Controllers\TasksController::class, 'create']);

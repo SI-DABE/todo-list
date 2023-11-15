@@ -116,6 +116,31 @@ abstract class Base
         return ($stmt->rowCount() != 0);
     }
 
+    public function update($data)
+    {
+        $table = static::$table;
+        $sets = array_map(function ($column) {
+            return "{$column} = :{$column}";
+        }, array_keys($data));
+        $sets = implode(', ', $sets);
+
+        $sql = <<<SQL
+            UPDATE {$table} set {$sets} WHERE id = :id;
+        SQL;
+
+        $pdo = Database::getDBConnection();
+        $stmt = $pdo->prepare($sql);
+
+        $stmt->bindValue('id', $this->getId());
+        foreach ($data as $column => $value) {
+            $stmt->bindValue($column, $value);
+        }
+
+        $stmt->execute();
+
+        return ($stmt->rowCount() !== 0);
+    }
+
     public static function all()
     {
         $models = [];
@@ -203,7 +228,6 @@ abstract class Base
 
         return new static(...$row);
     }
-
 
     public static function paginator($page, $per_page)
     {

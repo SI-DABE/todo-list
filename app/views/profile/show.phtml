@@ -1,0 +1,19 @@
+<h1> Meu Perfil </h1>
+
+<p>
+    <img class="avatar" src="<?= $this->currentUser()->avatar()->path() ?>" alt="avatar">
+</p>
+<p>
+    <strong>Nome: </strong> <?= $this->currentUser()->getName() ?>
+</p>
+<p>
+    <strong>Email: </strong> <?= $this->currentUser()->getEmail() ?>
+</p>
+
+<hr>
+
+<form action="/profile" method="POST" enctype="multipart/form-data">
+    <label for="user_avatar">Selecione o avatar</label>
+    <input type="file" name="user_avatar" id="user_avatar">
+    <input type="submit" value="Enviar">
+</form>

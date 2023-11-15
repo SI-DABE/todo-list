@@ -12,7 +12,7 @@
 
     <?php if ($this->currentUser) : ?>
         Olá <?= $this->currentUser->getName(); ?>
-        <a href="/logout">Sair</a>
+        <a href="/logout">Sair</a> | <a href="/profile">Meu Perfil</a> | <a href="/tasks">Minhas Tarefas</a>
     <?php else : ?>
         <a href="/login">Entrar</a> | <a href="/sign-up">Registrar-se</a>
     <?php endif ?>

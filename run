@@ -21,6 +21,18 @@ function composer {
     docker run --rm -u "$(id -u):$(id -g)" -v "$(pwd):/app" -w /app composer:2.6.3 composer "${@}"
 }
 
+function nginx:check {
+    docker compose exec web nginx -t
+}
+
+function nginx:reload {
+    docker compose exec web nginx -s reload
+}
+
+function nginx:status {
+    docker compose exec web service nginx status
+}
+
 function test {
     TEST_PATH="${@:-tests}"
     docker compose run --rm php ./vendor/bin/phpunit --color ${TEST_PATH}

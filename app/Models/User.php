@@ -5,18 +5,20 @@ namespace App\Models;
 use App\Lib\Paginator;
 use App\Lib\Validations;
 use App\Models\Base;
+use App\Services\ProfileAvatar;
 use App\Services\UserTasksService;
 
 class User extends Base
 {
     protected static string $table =      'users';
-    protected static array  $attributes = ['name', 'email', 'password'];
+    protected static array  $attributes = ['name', 'email', 'password', 'avatar_name'];
 
     public function __construct(
         $id = -1,
         protected string $name = '',
         protected string $email = '',
         protected string $password = '',
+        protected string | null $avatar_name = null,
         protected string $password_confirmation = ''
     ) {
         parent::__construct($id);
@@ -34,6 +36,11 @@ class User extends Base
     public function getEmail(): string
     {
         return $this->email;
+    }
+
+    public function getAvatarName()
+    {
+        return $this->avatar_name;
     }
 
     public function validates()
@@ -60,6 +67,11 @@ class User extends Base
     public function tasks()
     {
         return new UserTasksService($this);
+    }
+
+    public function avatar()
+    {
+        return new ProfileAvatar($this);
     }
 
     public static function findByEmail(string $email): User | null
