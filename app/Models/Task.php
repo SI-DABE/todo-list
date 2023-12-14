@@ -35,4 +35,9 @@ class Task extends Base
     {
         return new TaskUsersService($this);
     }
+
+    public function toArray()
+    {
+        return ['id' => 1];
+    }
 }

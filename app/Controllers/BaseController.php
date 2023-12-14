@@ -20,6 +20,17 @@ class BaseController
         require ROOT_PATH . '/app/views/layouts/' . $this->layout .  '.phtml';
     }
 
+    public function renderJson($view, $data = [])
+    {
+        extract($data);
+        $view = ROOT_PATH . '/app/views/' . $view .  '.json.php';
+        $json = [];
+        header('Content-Type: application/json; charset=utf-8');
+        require $view;
+        echo json_encode($json);
+        return;
+    }
+
     public function setParams(array $params)
     {
         $this->params = $params;

@@ -14,10 +14,11 @@ class TasksController extends BaseController
     {
         $this->authenticated();
 
-        $task = new Task();
-        $tasks = $this->currentUser()->tasks()->all();
+        $tasks = Task::all();
 
-        $this->render('tasks/index', compact('task', 'tasks'));
+        // $tasks = $this->currentUser()->tasks()->all();
+
+        $this->renderJson('tasks/index', compact('tasks'));
     }
 
     public function show()
